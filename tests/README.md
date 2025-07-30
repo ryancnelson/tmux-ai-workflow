@@ -1,13 +1,92 @@
 # AI Handoff Testing
 
-This directory contains tests and demonstrations of the Claude ↔ phi3 handoff pattern using Perl's build process as a realistic benchmark.
+This directory contains a comprehensive test suite for the Claude ↔ phi3 handoff pattern using Perl's build process as a realistic benchmark.
+
+## 🧪 Test Suite Overview
+
+### **Quick Start**
+```bash
+# Run all tests
+./run-all-tests.sh
+
+# Run specific test types
+./integration-tests.sh           # Integration tests
+python3 unit/test_ryan_workflow.py  # Unit tests
+python3 stress-tests.py          # Stress tests
+```
+
+### **Test Categories**
+
+#### 1. **Unit Tests** (`unit/test_ryan_workflow.py`)
+- ✅ phi3 natural language parsing
+- ✅ Command generation and tmux targeting  
+- ✅ Output cleaning and error detection
+- ✅ Base64 safety protocols
+- ✅ Pane mapping and timeout logic
+- ✅ Edge case handling
+
+#### 2. **Integration Tests** (`integration-tests.sh`)
+- ✅ Complete tmux session lifecycle
+- ✅ Multi-pane command execution
+- ✅ Recovery script functionality
+- ✅ Session persistence and reattachment
+- ✅ Error handling workflows
+- ✅ Real command execution
+
+#### 3. **Stress Tests** (`stress-tests.py`)
+- ⚡ High-volume parsing (1000+ commands)
+- ⚡ Concurrent load testing (10+ workers)
+- ⚡ Memory leak detection
+- ⚡ Performance benchmarking
+- ⚡ Edge case bombardment
+
+#### 4. **Safety Protocol Tests**
+- 🛡️ Heredoc prohibition enforcement
+- 🛡️ Base64 encoding verification
+- 🛡️ Recovery command validation
+- 🛡️ Documentation completeness
+- 🛡️ Warning visibility checks
+
+#### 5. **AI Handoff Tests**
+- 🤖 Claude → phi3 command translation
+- 🤖 phi3 → Claude output cleaning
+- 🤖 Token optimization verification
+- 🤖 Error escalation protocols
+- 🤖 Performance optimization
+
+#### 6. **Real-World Scenarios**
+- 🌍 Stuck heredoc recovery
+- 🌍 Complex build processes (Perl)
+- 🌍 Multi-step development workflows
+- 🌍 Interactive program handling
+- 🌍 Long-running command management
 
 ## Files
 
-- **`perl-5.40.0/`** - Perl source code for testing
+### **Core Test Files**
+- **`run-all-tests.sh`** - Master test runner (executes all test suites)
+- **`integration-tests.sh`** - End-to-end system integration tests
+- **`stress-tests.py`** - High-load performance and stress testing
+- **`unit/test_ryan_workflow.py`** - Python unit tests for core components
+
+### **Demo and Simulation**
 - **`test-ai-handoff.sh`** - Demonstrates the complete handoff pattern
 - **`phi3-simulator.py`** - Shows what phi3 would do for parsing/cleaning
+- **`perl-5.40.0/`** - Perl source code for realistic build testing
 - **`README.md`** - This file
+
+### **Expected Test Results**
+```
+╔══════════════════════════════════════════════════════════╗
+║                        TEST SUMMARY                         ║
+╚══════════════════════════════════════════════════════════╝
+
+Total test suites: 7
+Passed: 7
+Failed: 0
+
+🎉 ALL TEST SUITES PASSED! 🎉
+```
 
 ## The Handoff Pattern
 
