@@ -1,0 +1,22 @@
+# Exclude Perl source code from tests
+tests/perl-5.40.0/
+tests/perl-5.40.0.tar.gz
+
+# Common development files
+.DS_Store
+*.log
+*.tmp
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db

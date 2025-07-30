@@ -48,12 +48,41 @@ else
 fi
 
 echo
+echo "=== 🧠 SERENA INTEGRATION ==="
+echo "• Memory Hub: Use 'serena' project for persistent context across sessions"
+echo "• Key Memories: ryan-workflow-system-overview, ai-token-optimization-research"
+echo "• Access Pattern: Serena:activate_project('serena') → Serena:read_memory('memory-name')"
+echo "• Documentation: Serena:write_memory() to save important discoveries/context"
+echo "• Shell Access: Serena:execute_shell_command() for tmux operations"
+echo
+
+echo "=== 📁 FILESYSTEM TOOLS INTEGRATION ==="
+echo "• File Access: filesystem:read_file('/full/path/to/file') for ANY directory"
+echo "• Safe Inspection: ALWAYS read before modifying files"
+echo "• File Creation: filesystem:write_file('/path', 'content') with explicit content"
+echo "• Directory Ops: filesystem:list_directory(), filesystem:search_files()"
+echo "• Multi-file: filesystem:read_multiple_files(['path1', 'path2'])"
+echo "• Safety: Time Machine backups provide recovery safety net"
+echo "• Coverage: Full access to ~/devel, ~/ted, and any other directories"
+echo
+
+echo "=== 🤖 AI TOKEN OPTIMIZATION (Research Complete) ==="
+echo "• Two-Tier Architecture: Claude (strategy) + phi3/Ollama (routine tasks)"
+echo "• Handoff Pattern: Natural language → phi3 translation → tmux → phi3 cleanup → Claude"
+echo "• Token Savings: Local AI handles parsing/translation, Claude focuses on reasoning"
+echo "• Implementation: phi3-simulator.py demonstrates the pattern"
+echo "• Test Suite: Comprehensive validation in tests/ directory"
+echo "• Benefits: Speed, cost efficiency, reliability, scalability"
+echo
+
 echo "=== ⚠️  CRITICAL SAFETY RULES ⚠️  ==="
 echo "1. NEVER use heredoc syntax (cat << EOF) - ALWAYS use base64 encoding"
 echo "2. If pane is stuck, DO NOT run recovery commands IN that pane"
 echo "3. Run recovery commands from OUTSIDE tmux or in a different pane"
 echo "4. Always add newline after EOF markers to avoid confusion"
 echo "5. When in doubt, use base64: echo 'content' | base64 | base64 -d > file"
+echo "6. Use filesystem tools CAREFULLY - inspect before modifying"
+echo "7. Store important context in Serena memories for persistence"
 echo
 echo "• Use natural language: 'Run [command] in the [left|top|bottom] pane'"
 echo "• tmux targets: ryan-workflow:0.0 (left), ryan-workflow:0.1 (top), ryan-workflow:0.2 (bottom)"
@@ -70,10 +99,15 @@ echo "• Test suites: 300-600 seconds"
 echo "• Interactive programs: No timeout, monitor state instead"
 
 echo
-echo "=== KEY TMUX COMMANDS FOR AI ==="
-echo "• Send command: tmux send-keys -t ryan-workflow:0.[0|1|2] '[command]' Enter"
-echo "• Capture output: tmux capture-pane -t ryan-workflow:0.[0|1|2] -p"
-echo "• Check state: tmux capture-pane -t ryan-workflow:0.[0|1|2] -S -10"
+echo "=== OPERATIONAL COMMAND PATTERNS ==="
+echo "• tmux control: tmux send-keys -t ryan-workflow:0.[0|1|2] '[command]' Enter"
+echo "• tmux capture: tmux capture-pane -t ryan-workflow:0.[0|1|2] -p"
+echo "• tmux state: tmux capture-pane -t ryan-workflow:0.[0|1|2] -S -10"
+echo "• Serena memory: Serena:read_memory('memory-name')"
+echo "• Serena shell: Serena:execute_shell_command('command')"
+echo "• File read: filesystem:read_file('/full/path')"
+echo "• File write: filesystem:write_file('/path', 'content')"
+echo "• Directory list: filesystem:list_directory('/path')"
 
 echo
 echo "=== TROUBLESHOOTING STUCK SESSIONS ==="
@@ -94,5 +128,15 @@ echo "• Send clear: tmux send-keys -t ryan-workflow:0.[0|1|2] 'clear' Enter"
 echo "• Reset terminal: tmux send-keys -t ryan-workflow:0.[0|1|2] 'reset' Enter"
 echo "• Navigate home: tmux send-keys -t ryan-workflow:0.[0|1|2] 'cd' Enter"
 echo "• Use recovery script: ./tmux-recover [pane] [action] (run from outside tmux)"
+
+echo
+echo "=== 🎯 INTEGRATED WORKFLOW PATTERN ==="
+echo "1. Activate Serena: Serena:activate_project('serena')"
+echo "2. Load context: Serena:read_memory('relevant-context')"
+echo "3. Check tmux: ./tmux-hello (this script)"
+echo "4. File operations: filesystem:read_file() → inspect → filesystem:write_file()"
+echo "5. tmux commands: Serena:execute_shell_command() for tmux operations"
+echo "6. Save context: Serena:write_memory() for important discoveries"
+echo "7. AI collaboration: Natural language → phi3 translation → structured results"
 echo
 echo "=== READY FOR AI COLLABORATION ==="
