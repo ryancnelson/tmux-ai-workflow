@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# tmux-hello: AI Assistant Briefing Script
+# Explains the ryan-workflow tmux setup in terse, LLM-friendly terms
+
+echo "=== RYAN WORKFLOW TMUX SYSTEM ==="
+echo
+
+# Check if session exists
+if tmux has-session -t ryan-workflow 2>/dev/null; then
+    echo "STATUS: ryan-workflow session ACTIVE"
+    
+    # Show session layout
+    echo
+    echo "LAYOUT: 3-pane setup"
+    echo "┌─────────────┬─────────────┐"
+    echo "│             │     TOP     │"
+    echo "│    LEFT     │  (pane 0.1) │"
+    echo "│  (pane 0.0) ├─────────────┤"
+    echo "│             │   BOTTOM    │"
+    echo "│             │  (pane 0.2) │"
+    echo "└─────────────┴─────────────┘"
+    echo
+    
+    # Check current state of each pane
+    echo "PANE STATUS:"
+    for pane in 0 1 2; do
+        pane_name=""
+        case $pane in
+            0) pane_name="LEFT" ;;
+            1) pane_name="TOP" ;;
+            2) pane_name="BOTTOM" ;;
+        esac
+        
+        # Capture last line to check prompt
+        last_line=$(tmux capture-pane -t ryan-workflow:0.$pane -p | tail -1)
+        
+        if [[ "$last_line" == *"ryan-workflow-bash:$pane_name"* ]]; then
+            echo "  $pane_name: ✓ Ready (proper prompt detected)"
+        else
+            echo "  $pane_name: ? Unknown state - last line: $last_line"
+        fi
+    done
+    
+else
+    echo "STATUS: ryan-workflow session NOT FOUND"
+    echo "RUN: ./setup-workflow.sh to create session"
+fi
+
+echo
+echo "=== AI COMMAND PROTOCOL ==="
+echo "• Use natural language: 'Run [command] in the [left|top|bottom] pane'"
+echo "• tmux targets: ryan-workflow:0.0 (left), ryan-workflow:0.1 (top), ryan-workflow:0.2 (bottom)"
+echo "• Expected prompts: 'ryan-workflow-bash:[PANE_NAME] $ '"
+echo "• For commands expected to finish: add 'timeout [duration] [command] ; echo ; echo \"program execution done. exit_code=\$?\"'"
+echo "• For text injection: use base64 encoding + 'base64 -d | tee filename.txt'"
+echo "• NEVER use heredoc syntax - causes shell escaping issues"
+
+echo
+echo "=== TIMEOUT RECOMMENDATIONS ==="
+echo "• Quick commands (ls, cd): 5-10 seconds"
+echo "• Build commands: 60-300 seconds"
+echo "• Test suites: 300-600 seconds"
+echo "• Interactive programs: No timeout, monitor state instead"
+
+echo
+echo "=== KEY TMUX COMMANDS FOR AI ==="
+echo "• Send command: tmux send-keys -t ryan-workflow:0.[0|1|2] '[command]' Enter"
+echo "• Capture output: tmux capture-pane -t ryan-workflow:0.[0|1|2] -p"
+echo "• Check state: tmux capture-pane -t ryan-workflow:0.[0|1|2] -S -10"
+
+echo
+echo "=== READY FOR AI COLLABORATION ==="
