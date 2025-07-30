@@ -1,4 +1,4 @@
-# Ryan Workflow - AI-Collaborative Coding System
+# AI-Workflow - AI-Collaborative Coding System
 
 ## Overview
 A tmux-based system that enables seamless collaboration between a human developer and an AI assistant through structured terminal sessions with named panes and standardized communication protocols.
@@ -6,7 +6,7 @@ A tmux-based system that enables seamless collaboration between a human develope
 ## Core Architecture
 
 ### Session Structure
-- **Session Name**: `ryan-workflow`
+- **Session Name**: `ai-workflow`
 - **Layout**: Three-pane layout
   - **Left Pane**: Named "left" - Full height, left half of screen
   - **Top Pane**: Named "top" - Upper right quadrant  
@@ -14,10 +14,10 @@ A tmux-based system that enables seamless collaboration between a human develope
 
 ### Configuration Requirements
 - **Mouse Mode**: Enabled for intuitive pane navigation
-- **Custom Bash Prompts**: Each pane displays `ryan-workflow-bash:[PANE_NAME]` 
-  - Left pane: `ryan-workflow-bash:left $ `
-  - Top pane: `ryan-workflow-bash:top $ `
-  - Bottom pane: `ryan-workflow-bash:bottom $ `
+- **Custom Bash Prompts**: Each pane displays `ai-workflow-bash:[PANE_NAME]` 
+  - Left pane: `ai-workflow-bash:left $ `
+  - Top pane: `ai-workflow-bash:top $ `
+  - Bottom pane: `ai-workflow-bash:bottom $ `
 
 ## AI Assistant Command Execution Protocol
 
@@ -63,9 +63,9 @@ echo "[BASE64_ENCODED_CONTENT]" | base64 -d | tee -a output.filename.txt
 ### AI Assistant Commands
 
 #### Core tmux Operations
-- `tmux send-keys -t ryan-workflow:[PANE_NAME] "[COMMAND]" Enter`
-- `tmux capture-pane -t ryan-workflow:[PANE_NAME] -p`
-- `tmux capture-pane -t ryan-workflow:[PANE_NAME] -S -[LINES]`
+- `tmux send-keys -t ai-workflow:[PANE_NAME] "[COMMAND]" Enter`
+- `tmux capture-pane -t ai-workflow:[PANE_NAME] -p`
+- `tmux capture-pane -t ai-workflow:[PANE_NAME] -S -[LINES]`
 
 #### Workflow Commands
 - **Execute in Pane**: Natural language - "Run `npm test` in the top pane"
@@ -83,14 +83,14 @@ echo "[BASE64_ENCODED_CONTENT]" | base64 -d | tee -a output.filename.txt
 ### Prompt Configuration
 Each pane requires custom PS1 environment variable:
 ```bash
-export PS1="ryan-workflow-bash:[PANE_NAME] $ "
+export PS1="ai-workflow-bash:[PANE_NAME] $ "
 ```
 
 ## Implementation Details
 
 ### 1. Session Setup
 - **Setup Script**: `setup-workflow.sh` automatically handles:
-  - Check if `ryan-workflow` session exists
+  - Check if `ai-workflow` session exists
   - If exists: attach to existing session
   - If not: create new session with proper layout, mouse mode, and custom prompts
   - Set up bash prompts in each pane during session creation
@@ -104,7 +104,7 @@ export PS1="ryan-workflow-bash:[PANE_NAME] $ "
 ### 3. Prompt Management
 - **Setup**: Bash prompts configured during session initialization
 - **Flexibility**: AI can adjust prompts to include additional info when needed
-- **Reset**: AI can restore to standard `ryan-workflow-bash:[PANE_NAME]` format on request
+- **Reset**: AI can restore to standard `ai-workflow-bash:[PANE_NAME]` format on request
 
 ### 4. Command Timeout Defaults
 - **Quick commands** (ls, cd, etc.): 5-10 seconds

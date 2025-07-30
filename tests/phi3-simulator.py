@@ -16,9 +16,9 @@ class Phi3Simulator:
     
     def __init__(self):
         self.pane_mapping = {
-            'left': 'ryan-workflow:0.0',
-            'top': 'ryan-workflow:0.1', 
-            'bottom': 'ryan-workflow:0.2'
+            'left': 'ai-workflow:0.0',
+            'top': 'ai-workflow:0.1', 
+            'bottom': 'ai-workflow:0.2'
         }
         
         self.timeout_defaults = {
@@ -104,7 +104,7 @@ class Phi3Simulator:
         # Remove prompt lines and completion markers
         cleaned_lines = []
         for line in lines:
-            if not line.startswith('ryan-workflow-bash:') and \
+            if not line.startswith('ai-workflow-bash:') and \
                'program execution done' not in line and \
                line.strip():
                 cleaned_lines.append(line)

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# Ryan Workflow Setup Script
-# Creates or attaches to the ryan-workflow tmux session
+# AI Workflow Setup Script
+# Creates or attaches to the ai-workflow tmux session
 
-SESSION_NAME="ryan-workflow"
+SESSION_NAME="ai-workflow"
 
 # Function to set up custom prompt in a pane
 setup_pane_prompt() {
@@ -13,21 +13,21 @@ setup_pane_prompt() {
     echo "Setting up prompt for $pane_name pane..."
     
     # Set the custom PS1 prompt
-    tmux send-keys -t "$pane_target" "export PS1='ryan-workflow-bash:$pane_name \$ '" Enter
+    tmux send-keys -t "$pane_target" "export PS1='ai-workflow-bash:$pane_name \$ '" Enter
     
     # Clear the screen for a clean start
     tmux send-keys -t "$pane_target" "clear" Enter
     
     # Send a comment to help identify the pane
-    tmux send-keys -t "$pane_target" "# $pane_name pane ready for ryan-workflow" Enter
+    tmux send-keys -t "$pane_target" "# $pane_name pane ready for ai-workflow" Enter
 }
 
 # Check if session already exists
 if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
-    echo "ryan-workflow session already exists. Attaching..."
+    echo "ai-workflow session already exists. Attaching..."
     tmux attach-session -t "$SESSION_NAME"
 else
-    echo "Creating new ryan-workflow session..."
+    echo "Creating new ai-workflow session..."
     
     # Create new session (detached)
     tmux new-session -d -s "$SESSION_NAME"
@@ -50,7 +50,7 @@ else
     # Select the left pane as default
     tmux select-pane -t "$SESSION_NAME:0.0"
     
-    echo "ryan-workflow session created successfully!"
+    echo "ai-workflow session created successfully!"
     echo "Panes configured:"
     echo "  - Left pane: full height, left side"
     echo "  - Top pane: upper right quadrant"

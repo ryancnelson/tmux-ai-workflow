@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # tmux-hello: AI Assistant Briefing Script
-# Explains the ryan-workflow tmux setup in terse, LLM-friendly terms
+# Explains the AI-workflow tmux setup in terse, LLM-friendly terms
 
-echo "=== RYAN WORKFLOW TMUX SYSTEM ==="
+echo "=== AI-WORKFLOW TMUX SYSTEM ==="
 echo
 
 # Check if session exists
-if tmux has-session -t ryan-workflow 2>/dev/null; then
-    echo "STATUS: ryan-workflow session ACTIVE"
+if tmux has-session -t ai-workflow 2>/dev/null; then
+    echo "STATUS: ai-workflow session ACTIVE"
     
     # Show session layout
     echo
@@ -33,9 +33,9 @@ if tmux has-session -t ryan-workflow 2>/dev/null; then
         esac
         
         # Capture last line to check prompt
-        last_line=$(tmux capture-pane -t ryan-workflow:0.$pane -p | tail -1)
+        last_line=$(tmux capture-pane -t ai-workflow:0.$pane -p | tail -1)
         
-        if [[ "$last_line" == *"ryan-workflow-bash:$pane_name"* ]]; then
+        if [[ "$last_line" == *"ai-workflow-bash:$pane_name"* ]]; then
             echo "  $pane_name: ✓ Ready (proper prompt detected)"
         else
             echo "  $pane_name: ? Unknown state - last line: $last_line"
@@ -43,14 +43,14 @@ if tmux has-session -t ryan-workflow 2>/dev/null; then
     done
     
 else
-    echo "STATUS: ryan-workflow session NOT FOUND"
+    echo "STATUS: ai-workflow session NOT FOUND"
     echo "RUN: ./setup-workflow.sh to create session"
 fi
 
 echo
 echo "=== 🧠 SERENA INTEGRATION ==="
 echo "• Memory Hub: Use 'serena' project for persistent context across sessions"
-echo "• Key Memories: ryan-workflow-system-overview, ai-token-optimization-research"
+echo "• Key Memories: ai-workflow-system-overview, ai-token-optimization-research"
 echo "• Access Pattern: Serena:activate_project('serena') → Serena:read_memory('memory-name')"
 echo "• Documentation: Serena:write_memory() to save important discoveries/context"
 echo "• Shell Access: Serena:execute_shell_command() for tmux operations"
@@ -85,8 +85,8 @@ echo "6. Use filesystem tools CAREFULLY - inspect before modifying"
 echo "7. Store important context in Serena memories for persistence"
 echo
 echo "• Use natural language: 'Run [command] in the [left|top|bottom] pane'"
-echo "• tmux targets: ryan-workflow:0.0 (left), ryan-workflow:0.1 (top), ryan-workflow:0.2 (bottom)"
-echo "• Expected prompts: 'ryan-workflow-bash:[PANE_NAME] $ '"
+echo "• tmux targets: ai-workflow:0.0 (left), ai-workflow:0.1 (top), ai-workflow:0.2 (bottom)"
+echo "• Expected prompts: 'ai-workflow-bash:[PANE_NAME] $ '"
 echo "• For commands expected to finish: add 'timeout [duration] [command] ; echo ; echo \"program execution done. exit_code=\$?\"'"
 echo "• For text injection: use base64 encoding + 'base64 -d | tee filename.txt'"
 echo "• NEVER use heredoc syntax - causes shell escaping issues"
@@ -100,9 +100,9 @@ echo "• Interactive programs: No timeout, monitor state instead"
 
 echo
 echo "=== OPERATIONAL COMMAND PATTERNS ==="
-echo "• tmux control: tmux send-keys -t ryan-workflow:0.[0|1|2] '[command]' Enter"
-echo "• tmux capture: tmux capture-pane -t ryan-workflow:0.[0|1|2] -p"
-echo "• tmux state: tmux capture-pane -t ryan-workflow:0.[0|1|2] -S -10"
+echo "• tmux control: tmux send-keys -t ai-workflow:0.[0|1|2] '[command]' Enter"
+echo "• tmux capture: tmux capture-pane -t ai-workflow:0.[0|1|2] -p"
+echo "• tmux state: tmux capture-pane -t ai-workflow:0.[0|1|2] -S -10"
 echo "• Serena memory: Serena:read_memory('memory-name')"
 echo "• Serena shell: Serena:execute_shell_command('command')"
 echo "• File read: filesystem:read_file('/full/path')"
@@ -122,11 +122,11 @@ echo "• Emergency reset: Type 'stty sane' and press Enter"
 echo
 echo "=== RECOVERY COMMANDS FOR AI ==="
 echo "⚠️  CRITICAL: Run these from OUTSIDE the stuck pane or OUTSIDE tmux entirely"
-echo "• Check pane state: tmux capture-pane -t ryan-workflow:0.[0|1|2] -p | tail -3"
-echo "• Send Ctrl+C: tmux send-keys -t ryan-workflow:0.[0|1|2] C-c"
-echo "• Send clear: tmux send-keys -t ryan-workflow:0.[0|1|2] 'clear' Enter"
-echo "• Reset terminal: tmux send-keys -t ryan-workflow:0.[0|1|2] 'reset' Enter"
-echo "• Navigate home: tmux send-keys -t ryan-workflow:0.[0|1|2] 'cd' Enter"
+echo "• Check pane state: tmux capture-pane -t ai-workflow:0.[0|1|2] -p | tail -3"
+echo "• Send Ctrl+C: tmux send-keys -t ai-workflow:0.[0|1|2] C-c"
+echo "• Send clear: tmux send-keys -t ai-workflow:0.[0|1|2] 'clear' Enter"
+echo "• Reset terminal: tmux send-keys -t ai-workflow:0.[0|1|2] 'reset' Enter"
+echo "• Navigate home: tmux send-keys -t ai-workflow:0.[0|1|2] 'cd' Enter"
 echo "• Use recovery script: ./tmux-recover [pane] [action] (run from outside tmux)"
 
 echo
