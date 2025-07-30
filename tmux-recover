@@ -1,0 +1,150 @@
+#!/bin/bash
+
+# tmux-recover: Emergency recovery commands for stuck ryan-workflow sessions
+# Usage: ./tmux-recover [pane] [action]
+
+SESSION="ryan-workflow"
+PANE_MAPPING=("0.0" "0.1" "0.2")
+PANE_NAMES=("left" "top" "bottom")
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+show_usage() {
+    echo "Usage: $0 [pane] [action]"
+    echo
+    echo "Panes: left, top, bottom (or 0, 1, 2)"
+    echo "Actions:"
+    echo "  interrupt  - Send Ctrl+C to stop current command"
+    echo "  clear      - Clear the screen"
+    echo "  reset      - Reset terminal state"
+    echo "  home       - Navigate to home directory"
+    echo "  status     - Check current pane state"
+    echo "  emergency  - Full recovery sequence"
+    echo "  all        - Apply action to all panes"
+    echo
+    echo "Examples:"
+    echo "  $0 top interrupt    # Stop hanging command in top pane"
+    echo "  $0 left clear       # Clear left pane screen"
+    echo "  $0 all emergency    # Emergency recovery for all panes"
+    echo "  $0 1 status         # Check status of pane 1 (top)"
+}
+
+get_pane_target() {
+    local pane="$1"
+    case "$pane" in
+        "left"|"0") echo "0.0" ;;
+        "top"|"1") echo "0.1" ;;
+        "bottom"|"2") echo "0.2" ;;
+        *) echo ""; return 1 ;;
+    esac
+}
+
+get_pane_name() {
+    local pane="$1"
+    case "$pane" in
+        "left"|"0") echo "left" ;;
+        "top"|"1") echo "top" ;;
+        "bottom"|"2") echo "bottom" ;;
+        *) echo "unknown" ;;
+    esac
+}
+
+check_session() {
+    if ! tmux has-session -t "$SESSION" 2>/dev/null; then
+        echo -e "${RED}Error: ryan-workflow session not found${NC}"
+        echo "Run ./setup-workflow.sh to create the session"
+        exit 1
+    fi
+}
+
+execute_action() {
+    local pane_target="$1"
+    local action="$2"
+    local pane_name="$3"
+    
+    echo -e "${BLUE}[${pane_name}]${NC} Executing: $action"
+    
+    case "$action" in
+        "interrupt")
+            tmux send-keys -t "$SESSION:$pane_target" C-c
+            echo -e "${YELLOW}Sent Ctrl+C to $pane_name pane${NC}"
+            ;;
+        "clear")
+            tmux send-keys -t "$SESSION:$pane_target" "clear" Enter
+            echo -e "${GREEN}Cleared $pane_name pane${NC}"
+            ;;
+        "reset")
+            tmux send-keys -t "$SESSION:$pane_target" "reset" Enter
+            echo -e "${GREEN}Reset terminal in $pane_name pane${NC}"
+            ;;
+        "home")
+            tmux send-keys -t "$SESSION:$pane_target" "cd" Enter
+            echo -e "${GREEN}Navigated to home in $pane_name pane${NC}"
+            ;;
+        "status")
+            echo -e "${BLUE}Current state of $pane_name pane:${NC}"
+            tmux capture-pane -t "$SESSION:$pane_target" -p | tail -3
+            ;;
+        "emergency")
+            echo -e "${YELLOW}Emergency recovery for $pane_name pane...${NC}"
+            tmux send-keys -t "$SESSION:$pane_target" C-c
+            sleep 1
+            tmux send-keys -t "$SESSION:$pane_target" "clear" Enter
+            sleep 1
+            tmux send-keys -t "$SESSION:$pane_target" "cd" Enter
+            sleep 1
+            tmux send-keys -t "$SESSION:$pane_target" "export PS1='ryan-workflow-bash:$pane_name \$ '" Enter
+            tmux send-keys -t "$SESSION:$pane_target" "clear" Enter
+            echo -e "${GREEN}Emergency recovery complete for $pane_name pane${NC}"
+            ;;
+        *)
+            echo -e "${RED}Unknown action: $action${NC}"
+            return 1
+            ;;
+    esac
+}
+
+main() {
+    if [[ $# -eq 0 ]]; then
+        show_usage
+        exit 1
+    fi
+    
+    check_session
+    
+    local pane="$1"
+    local action="$2"
+    
+    if [[ -z "$action" ]]; then
+        action="status"
+    fi
+    
+    if [[ "$pane" == "all" ]]; then
+        echo -e "${BLUE}Applying '$action' to all panes...${NC}"
+        for i in {0..2}; do
+            local pane_target="${PANE_MAPPING[$i]}"
+            local pane_name="${PANE_NAMES[$i]}"
+            execute_action "$pane_target" "$action" "$pane_name"
+            echo
+        done
+    else
+        local pane_target
+        pane_target=$(get_pane_target "$pane")
+        if [[ -z "$pane_target" ]]; then
+            echo -e "${RED}Error: Invalid pane '$pane'${NC}"
+            show_usage
+            exit 1
+        fi
+        
+        local pane_name
+        pane_name=$(get_pane_name "$pane")
+        execute_action "$pane_target" "$action" "$pane_name"
+    fi
+}
+
+main "$@"

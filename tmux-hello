@@ -48,7 +48,13 @@ else
 fi
 
 echo
-echo "=== AI COMMAND PROTOCOL ==="
+echo "=== ⚠️  CRITICAL SAFETY RULES ⚠️  ==="
+echo "1. NEVER use heredoc syntax (cat << EOF) - ALWAYS use base64 encoding"
+echo "2. If pane is stuck, DO NOT run recovery commands IN that pane"
+echo "3. Run recovery commands from OUTSIDE tmux or in a different pane"
+echo "4. Always add newline after EOF markers to avoid confusion"
+echo "5. When in doubt, use base64: echo 'content' | base64 | base64 -d > file"
+echo
 echo "• Use natural language: 'Run [command] in the [left|top|bottom] pane'"
 echo "• tmux targets: ryan-workflow:0.0 (left), ryan-workflow:0.1 (top), ryan-workflow:0.2 (bottom)"
 echo "• Expected prompts: 'ryan-workflow-bash:[PANE_NAME] $ '"
@@ -69,5 +75,24 @@ echo "• Send command: tmux send-keys -t ryan-workflow:0.[0|1|2] '[command]' En
 echo "• Capture output: tmux capture-pane -t ryan-workflow:0.[0|1|2] -p"
 echo "• Check state: tmux capture-pane -t ryan-workflow:0.[0|1|2] -S -10"
 
+echo
+echo "=== TROUBLESHOOTING STUCK SESSIONS ==="
+echo "• Stuck in heredoc (> prompt): Send Ctrl+C, then clear"
+echo "• Hanging command: Send Ctrl+C to interrupt"
+echo "• Frozen terminal: Send Ctrl+L to refresh screen"
+echo "• Wrong directory: Use 'cd' to navigate back"
+echo "• Garbled output: Type 'reset' and press Enter"
+echo "• Process won't die: Try Ctrl+C, then Ctrl+Z, then 'kill %1'"
+echo "• Clear screen: Type 'clear' and press Enter"
+echo "• Emergency reset: Type 'stty sane' and press Enter"
+echo
+echo "=== RECOVERY COMMANDS FOR AI ==="
+echo "⚠️  CRITICAL: Run these from OUTSIDE the stuck pane or OUTSIDE tmux entirely"
+echo "• Check pane state: tmux capture-pane -t ryan-workflow:0.[0|1|2] -p | tail -3"
+echo "• Send Ctrl+C: tmux send-keys -t ryan-workflow:0.[0|1|2] C-c"
+echo "• Send clear: tmux send-keys -t ryan-workflow:0.[0|1|2] 'clear' Enter"
+echo "• Reset terminal: tmux send-keys -t ryan-workflow:0.[0|1|2] 'reset' Enter"
+echo "• Navigate home: tmux send-keys -t ryan-workflow:0.[0|1|2] 'cd' Enter"
+echo "• Use recovery script: ./tmux-recover [pane] [action] (run from outside tmux)"
 echo
 echo "=== READY FOR AI COLLABORATION ==="

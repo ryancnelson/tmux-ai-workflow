@@ -1,0 +1,7 @@
+ryan-workflow-bash:top $ make test
+Running test suite...
+Test 1: PASS
+Test 2: PASS  
+Test 3: FAIL - Missing dependency
+make: *** [test] Error 1
+program execution done. exit_code=2

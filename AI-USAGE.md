@@ -1,5 +1,19 @@
 # AI Assistant Usage Examples
 
+## 🚨 READ SAFETY-RULES.md FIRST 🚨
+
+**CRITICAL:** Before using this system, read `SAFETY-RULES.md`. It contains mandatory rules that prevent 90% of session problems.
+
+### 🛑 NEVER DO THESE THINGS:
+- ❌ Use heredoc syntax (`cat << EOF`)
+- ❌ Run recovery commands in stuck panes
+- ❌ Ignore base64 encoding rules
+
+### ✅ ALWAYS DO THESE THINGS:
+- ✅ Use base64 for file content
+- ✅ Run recovery from outside tmux
+- ✅ Check pane status before commands
+
 ## Running tmux-hello
 ```bash
 ./tmux-hello
