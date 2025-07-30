@@ -3,7 +3,39 @@
 # tmux-hello: AI Assistant Briefing Script
 # Explains the AI-workflow tmux setup in terse, LLM-friendly terms
 
+echo
+echo "=== 🐳 DOCKER INTEGRATION ==="
+if [ "$DOCKER_MODE" = "true" ]; then
+    echo "• Status: ACTIVE - Commands execute in Ubuntu container"
+    echo "• Safety: Host system protected from command execution"
+    echo "• Tools: Pre-installed Python, Node.js, build tools, tmux"
+    echo "• Filesystem: Claude tools access host files directly"
+    echo "• Ports: 3000, 5000, 8000, 8080, 8443, 9000 forwarded"
+    echo "• VSCode: Use 'code .' or dev container for remote development"
+else
+    echo "• Status: Available - Use './setup-workflow.sh --docker' to enable"
+    echo "• Benefits: Isolated execution, consistent Ubuntu environment"
+    echo "• Fallback: Native mode active (commands run on host)"
+fi
 echo "=== AI-WORKFLOW TMUX SYSTEM ==="
+echo
+
+# Detect execution environment
+DOCKER_MODE=false
+CONTAINER_NAME="ai-workflow-dev"
+if [ "$AI_WORKFLOW_MODE" = "docker" ] || [ -f /.dockerenv ]; then
+    DOCKER_MODE=true
+fi
+
+# Show environment information
+if [ "$DOCKER_MODE" = "true" ]; then
+    echo "ENVIRONMENT: 🐳 Docker Container (Ubuntu 22.04 LTS)"
+    echo "CONTAINER: $CONTAINER_NAME"
+    echo "WORKSPACE: /workspace (mapped from host)"
+else
+    echo "ENVIRONMENT: 🖥️  Native ($(uname -s))"
+    echo "WORKSPACE: $(pwd)"
+fi
 echo
 
 # Check if session exists
@@ -36,7 +68,11 @@ if tmux has-session -t ai-workflow 2>/dev/null; then
         last_line=$(tmux capture-pane -t ai-workflow:0.$pane -p | tail -1)
         
         if [[ "$last_line" == *"ai-workflow-bash:$pane_name"* ]]; then
-            echo "  $pane_name: ✓ Ready (proper prompt detected)"
+            if [[ "$last_line" == *"🐳"* ]]; then
+                echo "  $pane_name: ✓ Ready (Docker mode, proper prompt detected)"
+            else
+                echo "  $pane_name: ✓ Ready (Native mode, proper prompt detected)"
+            fi
         else
             echo "  $pane_name: ? Unknown state - last line: $last_line"
         fi

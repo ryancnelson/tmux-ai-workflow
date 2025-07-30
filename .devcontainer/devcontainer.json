@@ -1,0 +1,47 @@
+{
+    "name": "AI-Workflow Development Container",
+    "dockerComposeFile": "../docker-compose.yml",
+    "service": "ai-workflow",
+    "workspaceFolder": "/workspace",
+    
+    // Set *default* container specific settings.json values on container create.
+    "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": false,
+        "python.linting.flake8Enabled": true,
+        "python.formatting.provider": "black",
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "terminal.integrated.profiles.linux": {
+            "bash": {
+                "path": "/bin/bash",
+                "args": []
+            }
+        }
+    },
+
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "ms-python.python",
+        "ms-python.flake8",
+        "ms-python.black-formatter",
+        "ms-vscode.vscode-json",
+        "redhat.vscode-yaml",
+        "ms-vscode.makefile-tools",
+        "streetsidesoftware.code-spell-checker",
+        "GitHub.copilot",
+        "ms-vscode.hexeditor"
+    ],
+
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [3000, 5000, 8000, 8080, 8443, 9000],
+
+    // Use 'postCreateCommand' to run commands after the container is created.
+    "postCreateCommand": "echo 'AI-Workflow dev container ready! Run ./setup-workflow.sh to start tmux session.'",
+
+    // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "remoteUser": "developer",
+
+    // Keep container running
+    "shutdownAction": "none"
+}

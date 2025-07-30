@@ -4,15 +4,29 @@ A tmux-based system for seamless collaboration between developers and AI assista
 
 ## Quick Start
 
+### Docker Mode (Recommended)
 ```bash
-# Make the setup script executable and run it
+# Start with Docker (default - provides Ubuntu environment)
 chmod +x setup-workflow.sh
 ./setup-workflow.sh
+```
+
+### Native Mode
+```bash
+# Start without Docker (runs directly on host)
+./setup-workflow.sh --native
 ```
 
 This will either:
 - Create a new `ai-workflow` tmux session with the proper 3-pane layout
 - Or attach to an existing `ai-workflow` session if one is already running
+
+### Docker Benefits
+- **🛡️ Safety**: Commands execute in isolated Ubuntu container
+- **🔧 Consistency**: Same Ubuntu 22.04 LTS environment everywhere
+- **📦 Pre-configured**: Python, Node.js, build tools, tmux ready to use
+- **🔌 Port Forwarding**: Development servers accessible from host
+- **💻 VSCode Integration**: Remote development support via dev containers
 
 ## Session Layout
 
@@ -49,6 +63,15 @@ The AI assistant can execute commands using natural language:
 - **Heredoc Prevention**: Eliminates common tmux session breaking scenarios
 - **Recovery Tools**: Comprehensive error recovery and session management
 - **Timeout Handling**: Appropriate timeouts for different command types
+- **Container Isolation**: Docker mode provides additional safety layer
+
+### 🐳 Docker Integration
+- **Isolated Execution**: Commands run in Ubuntu container, protecting host system
+- **Consistent Environment**: Ubuntu 22.04 LTS with pre-installed development tools
+- **Volume Mapping**: Current directory mapped to `/workspace` in container
+- **Port Forwarding**: Common development ports (3000, 5000, 8000, 8080, 8443, 9000)
+- **VSCode Support**: Full dev container integration for remote development
+- **Host File Access**: Claude filesystem tools can still access host files directly
 
 ### 🧠 Memory Integration
 - **Persistent Context**: Integration with Serena memory system for cross-session context
@@ -58,7 +81,10 @@ The AI assistant can execute commands using natural language:
 ## Files
 
 - **`tmux-hello`**: Complete system briefing and AI integration guide
-- **`setup-workflow.sh`**: Session setup and management script
+- **`setup-workflow.sh`**: Session setup and management script (supports Docker/native)
+- **`Dockerfile`**: Ubuntu 22.04 container with development tools
+- **`docker-compose.yml`**: Docker Compose configuration for easy container management
+- **`.devcontainer/`**: VSCode dev container configuration
 - **`tmux-recover`**: Recovery tools for stuck sessions
 - **`SPECIFICATION.md`**: Complete technical specification
 - **`SAFETY-RULES.md`**: Critical safety protocols
@@ -77,25 +103,46 @@ See `tests/README.md` for detailed information about the AI handoff pattern and 
 
 ## Usage with AI
 
-Once the session is set up, work with your AI assistant using natural language commands targeting specific panes. The system handles:
+### Docker Mode (Recommended)
+Once the Docker container and session are set up:
+- Commands execute safely in isolated Ubuntu environment
+- Claude filesystem tools access host files directly
+- Development servers run in container but accessible from host
+- Use VSCode with dev containers for full IDE integration
+
+### Command Execution
+Work with your AI assistant using natural language commands targeting specific panes:
+- "Run `npm test` in the top pane" → Executes in container
+- "Check what's running in the left pane" → Shows container processes  
+- "Start development server on port 3000" → Accessible from host
+
+### The system handles:
 - tmux communication and command execution
 - Output parsing and error detection  
 - Session recovery and troubleshooting
 - Context persistence across sessions
+- Container lifecycle management
 
 Run `./tmux-hello` for a complete system briefing and operational guide.
 
 ## Benefits
 
 1. **Cost Efficiency**: Significant token savings through local AI integration
-2. **Reliability**: Comprehensive safety protocols prevent common session issues
-3. **Speed**: Local models handle routine tasks instantly
-4. **Scalability**: System designed for complex, long-running development workflows
-5. **Memory**: Persistent context and documentation across sessions
+2. **Safety**: Docker isolation protects host system + comprehensive safety protocols
+3. **Consistency**: Same Ubuntu environment across all machines and developers
+4. **Speed**: Local models handle routine tasks instantly
+5. **Scalability**: System designed for complex, long-running development workflows
+6. **Memory**: Persistent context and documentation across sessions
+7. **Tool Availability**: Pre-configured development environment ready to use
+8. **VSCode Integration**: Full remote development support with dev containers
 
 ## Future Plans
 
-- Docker containerization for portability
+- ✅ **Docker containerization** - Implemented with Ubuntu 22.04 LTS
+- ✅ **VSCode integration** - Dev container support added
 - MCP service integration (`mcp serve`)
 - Enhanced development tool integration
 - Expanded local model support beyond phi3/Ollama
+- Multi-container support for complex development environments
+- Cloud deployment options (AWS, GCP, Azure)
+- Team collaboration features

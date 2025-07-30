@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  ai-workflow:
+    build: .
+    container_name: ai-workflow-dev
+    volumes:
+      # Map current directory to /workspace in container
+      - .:/workspace
+      # Optional: Map home directory for persistent settings
+      - ~/.gitconfig:/home/developer/.gitconfig:ro
+      # Optional: Map SSH keys for git operations
+      - ~/.ssh:/home/developer/.ssh:ro
+    ports:
+      # Common development ports
+      - "3000:3000"   # React/Next.js dev server
+      - "5000:5000"   # Flask default
+      - "8000:8000"   # Python HTTP server / Django
+      - "8080:8080"   # Alternative HTTP
+      - "8443:8443"   # VSCode server
+      - "9000:9000"   # Alternative dev server
+    environment:
+      - TERM=xterm-256color
+      - AI_WORKFLOW_MODE=docker
+    # Keep container running
+    stdin_open: true
+    tty: true
+    # Use host networking for easier development
+    network_mode: host
+    # Optionally limit resources
+    # mem_limit: 4g
+    # cpus: 2.0

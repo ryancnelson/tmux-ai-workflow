@@ -2,6 +2,9 @@
 tests/perl-5.40.0/
 tests/perl-5.40.0.tar.gz
 
+# Docker-related files
+.dockerignore
+
 # Common development files
 .DS_Store
 *.log
@@ -13,6 +16,7 @@ __pycache__/
 
 # Editor files
 .vscode/
+!.devcontainer/
 .idea/
 *.swp
 *.swo
