@@ -26,6 +26,9 @@ RUN useradd -m -s /bin/bash developer \
     && usermod -aG sudo developer \
     && echo "developer ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+# Fix ownership of home directory and all subdirectories
+RUN chown -R developer:developer /home/developer
+
 # Set up basic tmux configuration
 RUN echo "set -g mouse on" > /etc/tmux.conf
 
@@ -40,7 +43,7 @@ WORKDIR /workspace
 ENV HOME=/home/developer
 ENV USER=developer
 
-# Basic Python setup
+# Basic Python setup (install to user directory)
 RUN python3 -m pip install --user pip --upgrade
 
 # Set up user bash configuration
