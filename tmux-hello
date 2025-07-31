@@ -1,178 +1,96 @@
 #!/bin/bash
 
-# tmux-hello: AI Assistant Briefing Script
-# Explains the AI-workflow tmux setup in terse, LLM-friendly terms
+# This script provides an overview of the AI Workflow TMUX system
 
-echo
-echo "=== 🐳 DOCKER INTEGRATION ==="
-if [ "$DOCKER_MODE" = "true" ]; then
-    echo "• Status: ACTIVE - Commands execute in Ubuntu container"
-    echo "• Safety: Host system protected from command execution"
-    echo "• Tools: Pre-installed Python, Node.js, build tools, tmux"
-    echo "• Filesystem: Claude tools access host files directly"
-    echo "• Ports: 3000, 5000, 8000, 8080, 8443, 9000 forwarded"
-    echo "• VSCode: Use 'code .' or dev container for remote development"
-else
-    echo "• Status: Available - Use './setup-workflow.sh --docker' to enable"
-    echo "• Benefits: Isolated execution, consistent Ubuntu environment"
-    echo "• Fallback: Native mode active (commands run on host)"
-fi
-echo "=== AI-WORKFLOW TMUX SYSTEM ==="
-echo
+cat << EOF
 
-# Detect execution environment
-DOCKER_MODE=false
-CONTAINER_NAME="ai-workflow-dev"
-if [ "$AI_WORKFLOW_MODE" = "docker" ] || [ -f /.dockerenv ]; then
-    DOCKER_MODE=true
-fi
+=== 🐳 DOCKER INTEGRATION ===
+• Status: Available - Use './setup-workflow.sh --docker' to enable
+• Benefits: Isolated execution, consistent Ubuntu environment
+• Fallback: Native mode active (commands run on host)
 
-# Show environment information
-if [ "$DOCKER_MODE" = "true" ]; then
-    echo "ENVIRONMENT: 🐳 Docker Container (Ubuntu 22.04 LTS)"
-    echo "CONTAINER: $CONTAINER_NAME"
-    echo "WORKSPACE: /workspace (mapped from host)"
-else
-    echo "ENVIRONMENT: 🖥️  Native ($(uname -s))"
-    echo "WORKSPACE: $(pwd)"
-fi
-echo
+=== AI-WORKFLOW TMUX SYSTEM ===
 
-# Check if session exists
-if tmux has-session -t ai-workflow 2>/dev/null; then
-    echo "STATUS: ai-workflow session ACTIVE"
-    
-    # Show session layout
-    echo
-    echo "LAYOUT: 3-pane setup"
-    echo "┌─────────────┬─────────────┐"
-    echo "│             │     TOP     │"
-    echo "│    LEFT     │  (pane 0.1) │"
-    echo "│  (pane 0.0) ├─────────────┤"
-    echo "│             │   BOTTOM    │"
-    echo "│             │  (pane 0.2) │"
-    echo "└─────────────┴─────────────┘"
-    echo
-    
-    # Check current state of each pane
-    echo "PANE STATUS:"
-    for pane in 0 1 2; do
-        pane_name=""
-        case $pane in
-            0) pane_name="LEFT" ;;
-            1) pane_name="TOP" ;;
-            2) pane_name="BOTTOM" ;;
-        esac
-        
-        # Capture last line to check prompt
-        last_line=$(tmux capture-pane -t ai-workflow:0.$pane -p | tail -1)
-        
-        if [[ "$last_line" == *"ai-workflow-bash:$pane_name"* ]]; then
-            if [[ "$last_line" == *"🐳"* ]]; then
-                echo "  $pane_name: ✓ Ready (Docker mode, proper prompt detected)"
-            else
-                echo "  $pane_name: ✓ Ready (Native mode, proper prompt detected)"
-            fi
-        else
-            echo "  $pane_name: ? Unknown state - last line: $last_line"
-        fi
-    done
-    
-else
-    echo "STATUS: ai-workflow session NOT FOUND"
-    echo "RUN: ./setup-workflow.sh to create session"
-fi
+ENVIRONMENT: 🖥️  Native (Darwin)
+WORKSPACE: /Volumes/ryan-home/ryan-homedir/devel/serena
 
-echo
-echo "=== 🧠 SERENA INTEGRATION ==="
-echo "• Memory Hub: Use 'serena' project for persistent context across sessions"
-echo "• Key Memories: ai-workflow-system-overview, ai-token-optimization-research"
-echo "• Access Pattern: Serena:activate_project('serena') → Serena:read_memory('memory-name')"
-echo "• Documentation: Serena:write_memory() to save important discoveries/context"
-echo "• Shell Access: Serena:execute_shell_command() for tmux operations"
-echo
+STATUS: ai-workflow session NOT FOUND
+RUN: ./setup-workflow.sh to create session
 
-echo "=== 📁 FILESYSTEM TOOLS INTEGRATION ==="
-echo "• File Access: filesystem:read_file('/full/path/to/file') for ANY directory"
-echo "• Safe Inspection: ALWAYS read before modifying files"
-echo "• File Creation: filesystem:write_file('/path', 'content') with explicit content"
-echo "• Directory Ops: filesystem:list_directory(), filesystem:search_files()"
-echo "• Multi-file: filesystem:read_multiple_files(['path1', 'path2'])"
-echo "• Safety: Time Machine backups provide recovery safety net"
-echo "• Coverage: Full access to ~/devel, ~/ted, and any other directories"
-echo
+=== 🧠 SERENA INTEGRATION ===
+• Memory Hub: Use 'serena' project for persistent context across sessions
+• Key Memories: ai-workflow-system-overview, ai-token-optimization-research
+• Access Pattern: Serena:activate_project('serena') → Serena:read_memory('memory-name')
+• Documentation: Serena:write_memory() to save important discoveries/context
+• Shell Access: Serena:execute_shell_command() for tmux operations
 
-echo "=== 🤖 AI TOKEN OPTIMIZATION (Research Complete) ==="
-echo "• Two-Tier Architecture: Claude (strategy) + phi3/Ollama (routine tasks)"
-echo "• Handoff Pattern: Natural language → phi3 translation → tmux → phi3 cleanup → Claude"
-echo "• Token Savings: Local AI handles parsing/translation, Claude focuses on reasoning"
-echo "• Implementation: phi3-simulator.py demonstrates the pattern"
-echo "• Test Suite: Comprehensive validation in tests/ directory"
-echo "• Benefits: Speed, cost efficiency, reliability, scalability"
-echo
+=== 📁 FILESYSTEM TOOLS INTEGRATION ===
+• File Access: filesystem:read_file('/full/path/to/file') for ANY directory
+• Safe Inspection: ALWAYS read before modifying files
+• File Creation: filesystem:write_file('/path', 'content') with explicit content
+• Directory Ops: filesystem:list_directory(), filesystem:search_files()
+• Multi-file: filesystem:read_multiple_files(['path1', 'path2'])
+• Safety: Time Machine backups provide recovery safety net
+• Coverage: Full access to ~/devel, ~/ted, and any other directories
 
-echo "=== ⚠️  CRITICAL SAFETY RULES ⚠️  ==="
-echo "1. NEVER use heredoc syntax (cat << EOF) - ALWAYS use base64 encoding"
-echo "2. If pane is stuck, DO NOT run recovery commands IN that pane"
-echo "3. Run recovery commands from OUTSIDE tmux or in a different pane"
-echo "4. Always add newline after EOF markers to avoid confusion"
-echo "5. When in doubt, use base64: echo 'content' | base64 | base64 -d > file"
-echo "6. Use filesystem tools CAREFULLY - inspect before modifying"
-echo "7. Store important context in Serena memories for persistence"
-echo
-echo "• Use natural language: 'Run [command] in the [left|top|bottom] pane'"
-echo "• tmux targets: ai-workflow:0.0 (left), ai-workflow:0.1 (top), ai-workflow:0.2 (bottom)"
-echo "• Expected prompts: 'ai-workflow-bash:[PANE_NAME] $ '"
-echo "• For commands expected to finish: add 'timeout [duration] [command] ; echo ; echo \"program execution done. exit_code=\$?\"'"
-echo "• For text injection: use base64 encoding + 'base64 -d | tee filename.txt'"
-echo "• NEVER use heredoc syntax - causes shell escaping issues"
+=== 🤖 AI TOKEN OPTIMIZATION (Research Complete) ===
+• Two-Tier Architecture: Claude (strategy) + phi3/Ollama (routine tasks)
+• Handoff Pattern: Natural language → phi3 translation → tmux → phi3 cleanup → Claude
+• Token Savings: Local AI handles parsing/translation, Claude focuses on reasoning
+• Implementation: phi3-simulator.py demonstrates the pattern
+• Test Suite: Comprehensive validation in tests/ directory
+• Benefits: Speed, cost efficiency, reliability, scalability
 
-echo
-echo "=== TIMEOUT RECOMMENDATIONS ==="
-echo "• Quick commands (ls, cd): 5-10 seconds"
-echo "• Build commands: 60-300 seconds"
-echo "• Test suites: 300-600 seconds"
-echo "• Interactive programs: No timeout, monitor state instead"
+=== ⚠️  CRITICAL SAFETY RULES ⚠️  ===
+1. NEVER use heredoc syntax (cat << EOF) - ALWAYS use base64 encoding
+2. If pane is stuck, DO NOT run recovery commands IN that pane
+3. Run recovery commands from OUTSIDE tmux or in a different pane
+4. Always add newline after EOF markers to avoid confusion
+5. When in doubt, use base64: echo 'content' | base64 | base64 -d > file
+6. Use filesystem tools CAREFULLY - inspect before modifying
+7. Store important context in Serena memories for persistence
 
-echo
-echo "=== OPERATIONAL COMMAND PATTERNS ==="
-echo "• tmux control: tmux send-keys -t ai-workflow:0.[0|1|2] '[command]' Enter"
-echo "• tmux capture: tmux capture-pane -t ai-workflow:0.[0|1|2] -p"
-echo "• tmux state: tmux capture-pane -t ai-workflow:0.[0|1|2] -S -10"
-echo "• Serena memory: Serena:read_memory('memory-name')"
-echo "• Serena shell: Serena:execute_shell_command('command')"
-echo "• File read: filesystem:read_file('/full/path')"
-echo "• File write: filesystem:write_file('/path', 'content')"
-echo "• Directory list: filesystem:list_directory('/path')"
+=== OPERATIONAL COMMAND PATTERNS ===
+• Native tmux targets: ai-workflow:0.0 (left), ai-workflow:0.1 (top), ai-workflow:0.2 (bottom)
+• Native command: tmux send-keys -t ai-workflow:0.[0|1|2] '[command]' Enter
+• Native tmux capture: tmux capture-pane -t ai-workflow:0.[0|1|2] -p
 
-echo
-echo "=== TROUBLESHOOTING STUCK SESSIONS ==="
-echo "• Stuck in heredoc (> prompt): Send Ctrl+C, then clear"
-echo "• Hanging command: Send Ctrl+C to interrupt"
-echo "• Frozen terminal: Send Ctrl+L to refresh screen"
-echo "• Wrong directory: Use 'cd' to navigate back"
-echo "• Garbled output: Type 'reset' and press Enter"
-echo "• Process won't die: Try Ctrl+C, then Ctrl+Z, then 'kill %1'"
-echo "• Clear screen: Type 'clear' and press Enter"
-echo "• Emergency reset: Type 'stty sane' and press Enter"
-echo
-echo "=== RECOVERY COMMANDS FOR AI ==="
-echo "⚠️  CRITICAL: Run these from OUTSIDE the stuck pane or OUTSIDE tmux entirely"
-echo "• Check pane state: tmux capture-pane -t ai-workflow:0.[0|1|2] -p | tail -3"
-echo "• Send Ctrl+C: tmux send-keys -t ai-workflow:0.[0|1|2] C-c"
-echo "• Send clear: tmux send-keys -t ai-workflow:0.[0|1|2] 'clear' Enter"
-echo "• Reset terminal: tmux send-keys -t ai-workflow:0.[0|1|2] 'reset' Enter"
-echo "• Navigate home: tmux send-keys -t ai-workflow:0.[0|1|2] 'cd' Enter"
-echo "• Use recovery script: ./tmux-recover [pane] [action] (run from outside tmux)"
+=== 🐳 DOCKER TMUX COMMAND PATTERNS ===
+• Docker Container Name: ai-workflow-dev
+• Docker Tmux Session Name: ai-workflow
+• Send command to left pane: 
+  docker exec ai-workflow-dev tmux send-keys -t ai-workflow:0.0 'your command' Enter
+• Send command to top pane: 
+  docker exec ai-workflow-dev tmux send-keys -t ai-workflow:0.1 'your command' Enter
+• Send command to bottom pane: 
+  docker exec ai-workflow-dev tmux send-keys -t ai-workflow:0.2 'your command' Enter
+• Capture Docker pane output: 
+  docker exec ai-workflow-dev tmux capture-pane -t ai-workflow:0.[0|1|2] -p
 
-echo
-echo "=== 🎯 INTEGRATED WORKFLOW PATTERN ==="
-echo "1. Activate Serena: Serena:activate_project('serena')"
-echo "2. Load context: Serena:read_memory('relevant-context')"
-echo "3. Check tmux: ./tmux-hello (this script)"
-echo "4. File operations: filesystem:read_file() → inspect → filesystem:write_file()"
-echo "5. tmux commands: Serena:execute_shell_command() for tmux operations"
-echo "6. Save context: Serena:write_memory() for important discoveries"
-echo "7. AI collaboration: Natural language → phi3 translation → structured results"
-echo
-echo "=== READY FOR AI COLLABORATION ==="
+=== TIMEOUT RECOMMENDATIONS ===
+• Quick commands (ls, cd): 5-10 seconds
+• Build commands: 60-300 seconds
+• Test suites: 300-600 seconds
+• Interactive programs: No timeout, monitor state instead
+
+=== TROUBLESHOOTING STUCK SESSIONS ===
+• Stuck in heredoc (> prompt): Send Ctrl+C, then clear
+• Hanging command: Send Ctrl+C to interrupt
+• Frozen terminal: Send Ctrl+L to refresh screen
+• Wrong directory: Use 'cd' to navigate back
+• Garbled output: Type 'reset' and press Enter
+• Process won't die: Try Ctrl+C, then Ctrl+Z, then 'kill %1'
+• Clear screen: Type 'clear' and press Enter
+• Emergency reset: Type 'stty sane' and press Enter
+
+=== 🎯 INTEGRATED WORKFLOW PATTERN ===
+1. Activate Serena: Serena:activate_project('serena')
+2. Load context: Serena:read_memory('relevant-context')
+3. Check tmux: ./tmux-hello (this script)
+4. File operations: filesystem:read_file() → inspect → filesystem:write_file()
+5. tmux commands: Serena:execute_shell_command() for tmux operations
+6. Save context: Serena:write_memory() for important discoveries
+7. AI collaboration: Natural language → phi3 translation → structured results
+
+=== READY FOR AI COLLABORATION ===
+EOF
