@@ -62,20 +62,8 @@ RUN python3 -m pip install --user pip --upgrade
 
 # Create Claude settings files with configuration
 RUN mkdir -p /home/developer/.claude && \
-    echo '{
-  "env": {
-    "CLAUDE_CODE_USE_BEDROCK": "1",
-    "AWS_PROFILE": "default",
-    "AWS_REGION": "us-east-1",
-    "ANTHROPIC_MODEL": "us.anthropic.claude-sonnet-4-20250514-v1:0"
-  }
-}' > /home/developer/.claude/settings.json && \
-    echo '{
-  "permissions": {
-    "allow": [],
-    "deny": []
-  }
-}' > /home/developer/.claude/settings.local.json
+    echo '{"CLAUDE_CODE_USE_BEDROCK":"1","AWS_PROFILE":"default","AWS_REGION":"us-east-1","ANTHROPIC_MODEL":"us.anthropic.claude-sonnet-4-20250514-v1:0"}' > /home/developer/.claude/settings.json && \
+    echo '{"permissions":{"allow":[],"deny":[]}}' > /home/developer/.claude/settings.local.json
 
 # Set up user bash configuration
 RUN echo "export PS1='developer@ai-workflow:\\w\\$ '" >> ~/.bashrc \
