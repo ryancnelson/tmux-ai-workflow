@@ -5,7 +5,7 @@ FROM ubuntu:22.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=UTC
 
-# Install essential packages only
+# Install essential packages
 RUN apt-get update && apt-get install -y \
     curl \
     wget \
@@ -14,8 +14,6 @@ RUN apt-get update && apt-get install -y \
     vim \
     python3 \
     python3-pip \
-    nodejs \
-    npm \
     build-essential \
     sudo \
     gpg \
@@ -23,13 +21,33 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install NVM (Node Version Manager)
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+# Set up environment for NVM and Node.js
+ENV NVM_DIR=/home/developer/.nvm
+SHELL ["/bin/bash", "-c"]
+
 # Create a non-root user for development
 RUN useradd -m -s /bin/bash developer \
     && usermod -aG sudo developer \
     && echo "developer ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Install claude-code (assuming NPM package)
-RUN npm install -g claude-code
+# Switch to developer user for Node.js installation
+USER developer
+WORKDIR /home/developer
+
+# Install latest LTS Node.js, npm, and claude-code
+RUN source $NVM_DIR/nvm.sh && \
+    nvm install --lts && \
+    nvm use --lts && \
+    npm install -g npm@latest && \
+    npm install -g claude-code && \
+    npm config set prefix $HOME/.npm-global && \
+    echo 'export PATH=$HOME/.npm-global/bin:$PATH' >> ~/.bashrc
+
+# Switch back to root to set up remaining system configurations
+USER root
 
 # Fix ownership of home directory and all subdirectories
 RUN chown -R developer:developer /home/developer
@@ -51,19 +69,26 @@ WORKDIR /workspace
 # Set environment variables for Claude and AWS
 ENV HOME=/home/developer
 ENV USER=developer
-ENV PATH="/home/developer/.local/bin:${PATH}"
+ENV PATH="/home/developer/.npm-global/bin:$PATH"
 ENV CLAUDE_CODE_USE_BEDROCK=1
 ENV AWS_PROFILE=default
 ENV AWS_REGION=us-east-1
 ENV ANTHROPIC_MODEL=us.anthropic.claude-sonnet-4-20250514-v1:0
 
-# Basic Python setup (install to user directory)
-RUN python3 -m pip install --user pip --upgrade
-
 # Create Claude settings files with configuration
 RUN mkdir -p /home/developer/.claude && \
-    echo '{"CLAUDE_CODE_USE_BEDROCK":"1","AWS_PROFILE":"default","AWS_REGION":"us-east-1","ANTHROPIC_MODEL":"us.anthropic.claude-sonnet-4-20250514-v1:0"}' > /home/developer/.claude/settings.json && \
-    echo '{"permissions":{"allow":[],"deny":[]}}' > /home/developer/.claude/settings.local.json
+    echo '{
+  "CLAUDE_CODE_USE_BEDROCK":"1",
+  "AWS_PROFILE":"default",
+  "AWS_REGION":"us-east-1",
+  "ANTHROPIC_MODEL":"us.anthropic.claude-sonnet-4-20250514-v1:0"
+}' > /home/developer/.claude/settings.json && \
+    echo '{
+  "permissions":{
+    "allow":[],
+    "deny":[]
+  }
+}' > /home/developer/.claude/settings.local.json
 
 # Set up user bash configuration
 RUN echo "export PS1='developer@ai-workflow:\\w\\$ '" >> ~/.bashrc \
