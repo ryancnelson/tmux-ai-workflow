@@ -47,11 +47,13 @@ check_docker() {
     return 0
 }
 
-# Function to check if Docker Compose is available
+# Function to check if Docker Compose is available and set the command
 check_docker_compose() {
     if command -v docker-compose &> /dev/null; then
+        DOCKER_COMPOSE_CMD="docker-compose"
         return 0
     elif docker compose version &> /dev/null; then
+        DOCKER_COMPOSE_CMD="docker compose"
         return 0
     else
         print_warning "Docker Compose not found, will use docker run instead"
@@ -158,7 +160,7 @@ start_docker_container() {
     
     # Use docker-compose if available, otherwise use docker run
     if check_docker_compose; then
-        docker-compose up -d
+        $DOCKER_COMPOSE_CMD up -d
     else
         docker run -d \
             --name "$CONTAINER_NAME" \
